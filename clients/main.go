@@ -34,7 +34,7 @@ func sendBlobToServer(blob *homeKit.IfaceInfoBlob) bool {
 	data, err := blob.ToJson()
 	check(err)
 
-	_, err = client.Post("http://127.0.0.1:8088/save/", "text/json", strings.NewReader(string(data)))
+	_, err = client.Post("http://127.0.0.1:8088/save/", "application/json", strings.NewReader(string(data)))
 	check(err)
 	return true
 }
