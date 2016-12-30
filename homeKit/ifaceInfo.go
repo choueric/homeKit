@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net"
 	"os"
+	"time"
 
 	"github.com/choueric/clog"
 )
@@ -15,6 +16,7 @@ type IfaceInfo struct {
 
 type IfaceInfoBlob struct {
 	InfoArray []IfaceInfo `json:"info_array"`
+	CurTime   time.Time   `json:"time"`
 }
 
 func (b *IfaceInfoBlob) ToJson() ([]byte, error) {
@@ -71,5 +73,6 @@ func NewIfaceInfoBlob(ifaces []net.Interface) (*IfaceInfoBlob, error) {
 		}
 	}
 
+	blob.CurTime = time.Now()
 	return &blob, nil
 }
