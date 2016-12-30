@@ -1,22 +1,26 @@
-<h1>Interface Information</h1>
+<title> HomeKit </title>
 
+<h1> HomeKit v0.1 </h1>
+
+<h2>Interface Information</h2>
+
+<p>
 <div class="headline">
-	Timestamp: {{.CurTime}}
+	<em>Updated time:</em> {{.CurTime}}
 </div>
-
 
 <div class="timeline">
     {{ if .InfoArray}}
+		<dl>
         {{range .InfoArray}}
-            <div class="note">
-            <p class="noteHeading">{{.Name}}</p>
-            <hr>
-            <p class="noteContent">{{.IP}}</p>
-            </div>
+		<dt>{{.Name}}</dt>
+		<dd>{{.IP}}</dd>
         {{end}}
+		</dl>
     {{else}}
         <div class="note">
             <p class="noteHeading">No Interfaces right now.</p>
         </div>
     {{end}}
 </div>
+</p>
