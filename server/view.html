@@ -1,3 +1,17 @@
 <h1>Interface Information</h1>
 
-<div>Results are: {{.}}</div>
+<div class="timeline">
+    {{ if .InfoArray}}
+        {{range .InfoArray}}
+            <div class="note">
+            <p class="noteHeading">{{.Name}}</p>
+            <hr>
+            <p class="noteContent">{{.IP}}</p>
+            </div>
+        {{end}}
+    {{else}}
+        <div class="note">
+            <p class="noteHeading">No Interfaces right now.</p>
+        </div>
+    {{end}}
+</div>
