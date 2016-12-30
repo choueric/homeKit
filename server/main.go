@@ -10,6 +10,10 @@ import (
 	"github.com/choueric/homeKit/homeKit"
 )
 
+/*
+ * URL, METHOD, HANDLER
+ */
+
 var gBlob homeKit.IfaceInfoBlob
 
 func viewHandler(w http.ResponseWriter, r *http.Request) {
@@ -24,18 +28,27 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func saveHandler(w http.ResponseWriter, r *http.Request) {
-	body, _ := ioutil.ReadAll(r.Body)
-	err := gBlob.FromJson(body)
-	if err != nil {
-		clog.Fatal(err)
-	}
-	for _, v := range gBlob.InfoArray {
-		clog.Printf("%s: %v\n", v.Name, v.IP)
+	if r.Method == "POST" {
+		clog.Printf("Path: %s\n", r.URL.Path)
+		body, _ := ioutil.ReadAll(r.Body)
+		err := gBlob.FromJson(body)
+		if err != nil {
+			clog.Fatal(err)
+		}
+		for _, v := range gBlob.InfoArray {
+			clog.Printf("%s: %v\n", v.Name, v.IP)
+		}
+	} else {
+		w.Write([]byte("wrong method"))
 	}
 }
 
 func main() {
+	//http.Handle("/static/", http.FileServer(http.Dir("public")))
 	http.HandleFunc("/", viewHandler)
 	http.HandleFunc("/save/", saveHandler)
-	http.ListenAndServe(":8088", nil)
+
+	port := ":8088"
+	clog.Printf("start server at %s\n", port)
+	http.ListenAndServe(port, nil)
 }
