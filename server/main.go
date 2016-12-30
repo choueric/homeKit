@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"html/template"
 	"io/ioutil"
 	"net/http"
@@ -19,12 +18,7 @@ var gBlob homeKit.IfaceInfoBlob
 func viewHandler(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles("view.html")
 
-	var text string
-	for _, v := range gBlob.InfoArray {
-		text += fmt.Sprintf("%s: %v\n", v.Name, v.IP)
-	}
-	clog.Printf("view: %s\n", text)
-	t.Execute(w, text)
+	t.Execute(w, gBlob)
 }
 
 func saveHandler(w http.ResponseWriter, r *http.Request) {
