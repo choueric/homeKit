@@ -33,7 +33,8 @@ func saveHandler(w http.ResponseWriter, r *http.Request) {
 			clog.Printf("%s: %v\n", v.Name, v.IP)
 		}
 	} else {
-		w.Write([]byte("wrong method"))
+		clog.Warn("unsupported method: %s", r.Method)
+		w.Write([]byte("unsupported method"))
 	}
 }
 
