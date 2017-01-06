@@ -1,26 +1,39 @@
-<title> HomeKit </title>
+<html>
+	<head>
+		<title> HomeKit </title>
+		<!--
+		<link rel="stylesheet" href="styles.css">
+		-->
+	</head>
 
-<h1> HomeKit v0.1 </h1>
+	<body>
 
-<h2>Interface Information</h2>
+		<h1> HomeKit v0.1 </h1>
+		<a href="https://github.com/choueric/homeKit">Home Page</a>
+		<hr>
 
-<p>
-<div class="headline">
-	<em>Updated time:</em> {{.CurTime}}
-</div>
+		<h2>Interface Information</h2>
 
-<div class="timeline">
-    {{ if .InfoArray}}
-		<dl>
-        {{range .InfoArray}}
-		<dt>{{.Name}}</dt>
-		<dd>{{.IP}}</dd>
-        {{end}}
-		</dl>
-    {{else}}
-        <div class="note">
-            <p class="noteHeading">No Interfaces right now.</p>
-        </div>
-    {{end}}
-</div>
-</p>
+		<p title="Update Time">
+		Updated time: <strong style="color:blue">{{.CurTime}}</strong>
+		</p>
+
+		<p title="IP addresses">
+		{{ if .InfoArray}}
+		<table border="1", style="background-color:powderblue">
+			<tr><th>Interface</th><th>IP</th></tr>
+			{{range .InfoArray}}
+			<tr><td>{{.Name}}</td><td>{{.IP}}</td></tr>
+			{{end}}
+		</table>
+		{{else}}
+		<div class="note">
+			<p class="noteHeading">No Interfaces right now.</p>
+		</div>
+		{{end}}
+		</p>
+		<hr>
+
+	</body>
+
+</html>
