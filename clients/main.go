@@ -6,10 +6,14 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/choueric/clog"
 	"github.com/choueric/homeKit/homeKit"
 )
+
+const WEBSERVER = "http://ericnode.info:8088"
+var gInfoArray []homeKit.IfaceInfo
 
 // fetch interfaces in system except: "lo"
 func getIfaces() []net.Interface {
@@ -34,25 +38,50 @@ func sendBlobToServer(blob *homeKit.IfaceInfoBlob) bool {
 	data, err := blob.ToJson()
 	check(err)
 
-	_, err = client.Post("http://127.0.0.1:8088/save/", "application/json", strings.NewReader(string(data)))
+	_, err = client.Post(WEBSERVER+"/save/", "application/json", strings.NewReader(string(data)))
 	check(err)
 	return true
 }
 
+func isBlobChanged(b *homeKit.IfaceInfoBlob) bool {
+	a := b.InfoArray
+	if len(gInfoArray) != len(a) {
+		gInfoArray = a
+		clog.Printf("len changed\n")
+		return true 
+	}
+
+	for i, v := range gInfoArray {
+		if (v.Name != a[i].Name) || (v.IP.Equal(a[i].IP) == false) {
+			gInfoArray = a
+			clog.Printf("%v != %v\n", v, a[i])
+			return true 
+		}
+	}
+	return false
+}
+
 func main() {
 	clog.SetFlags(clog.Lshortfile | clog.LstdFlags)
-
-	ifaces := getIfaces()
-
-	blob, err := homeKit.NewIfaceInfoBlob(ifaces)
-	check(err)
 
 	/*
 		if data, err := blob.ToJson(); err == nil {
 			fmt.Println(string(data))
 		}
 	*/
-	sendBlobToServer(blob)
+	for {
+		time.Sleep(1 * time.Second)
+		ifaces := getIfaces()
+		blob, err := homeKit.NewIfaceInfoBlob(ifaces)
+		check(err)
+
+		if isBlobChanged(blob) == false {
+			continue;
+		}
+
+		clog.Printf("send blob\n")
+		sendBlobToServer(blob)
+	}
 }
 
 func check(err error) {

@@ -67,7 +67,6 @@ func NewIfaceInfoBlob(ifaces []net.Interface) (*IfaceInfoBlob, error) {
 			case *net.IPAddr:
 				ip = v.IP
 			}
-			clog.Printf("%s: %s\n", v.Name, a.String())
 			info := IfaceInfo{v.Name, ip}
 			blob.InfoArray = append(blob.InfoArray, info)
 		}
