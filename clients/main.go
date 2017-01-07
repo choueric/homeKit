@@ -84,9 +84,15 @@ func main() {
 	}
 }
 
-func check(err error) {
+func checkFatal(err error) {
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
+	}
+}
+
+func check(err error) {
+	if err != nil {
+		fmt.Println(err)
 	}
 }
