@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"net"
 	"net/http"
@@ -11,8 +12,6 @@ import (
 	"github.com/choueric/clog"
 	"github.com/choueric/homeKit/homeKit"
 )
-
-const WEBSERVER = "http://ericnode.info:8088"
 
 var gInfoArray []homeKit.IfaceInfo
 
@@ -33,13 +32,14 @@ func getIfaces() []net.Interface {
 	return ifaces
 }
 
-func sendBlobToServer(blob *homeKit.IfaceInfoBlob) bool {
+func sendBlobToServer(blob *homeKit.IfaceInfoBlob, server string) bool {
 	client := &http.Client{}
 
 	data, err := blob.ToJson()
 	check(err)
 
-	_, err = client.Post(WEBSERVER+"/save/", "application/json", strings.NewReader(string(data)))
+	_, err = client.Post("http://"+server+"/save/", "application/json",
+		strings.NewReader(string(data)))
 	check(err)
 	return true
 }
@@ -63,7 +63,26 @@ func isBlobChanged(b *homeKit.IfaceInfoBlob) bool {
 }
 
 func main() {
+	var (
+		optServer  string
+		server     string
+		configFile string
+	)
+
+	flag.StringVar(&optServer, "s", "", "server URL")
+	flag.StringVar(&configFile, "c", "config.json", "specify config file")
+	flag.Parse()
+
+	config := getConfig(configFile)
+	if optServer != "" {
+		server = optServer
+	} else {
+		server = config.Server
+	}
+
 	clog.SetFlags(clog.Lshortfile | clog.LstdFlags)
+
+	clog.Printf("server = %s\n", server)
 
 	/*
 		if data, err := blob.ToJson(); err == nil {
@@ -81,7 +100,7 @@ func main() {
 		}
 
 		clog.Printf("send blob\n")
-		sendBlobToServer(blob)
+		sendBlobToServer(blob, server)
 	}
 }
 
