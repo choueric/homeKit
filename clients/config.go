@@ -16,7 +16,7 @@ type Config struct {
 }
 
 func getConfig(file string) *Config {
-	jc := jconfig.New(".", file, Config{})
+	jc := jconfig.New(file, Config{})
 
 	if _, err := jc.Load(DefContent); err != nil {
 		clog.Fatal("load config error:", err)
