@@ -1,5 +1,5 @@
 EXEC:=server
-SRCS=main.go
+SRCS=*.go
 
 all:run
 

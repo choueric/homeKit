@@ -1,5 +1,5 @@
 EXEC=client
-SRCS=main.go
+SRCS=*.go
 
 all:run
 
