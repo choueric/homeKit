@@ -39,7 +39,9 @@ func saveHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	//http.Handle("/static/", http.FileServer(http.Dir("public")))
+	http.Handle("/js/", http.FileServer(http.Dir(".")))
+	http.Handle("/css/", http.FileServer(http.Dir(".")))
+
 	http.HandleFunc("/", viewHandler)
 	http.HandleFunc("/save/", saveHandler)
 
