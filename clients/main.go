@@ -73,7 +73,10 @@ func main() {
 	flag.StringVar(&configFile, "c", "config.json", "specify config file")
 	flag.Parse()
 
-	config := getConfig(configFile)
+	config, err := getConfig(configFile)
+	if err != nil {
+		clog.Fatal(err)
+	}
 	if optServer != "" {
 		server = optServer
 	} else {
